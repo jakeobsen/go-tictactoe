@@ -10,11 +10,11 @@ import (
 )
 
 var (
-	pos            = []string{"", "1", "2", "3", "4", "5", "6", "7", "8", "9"}
-	current_player = "x"
-	next_move      = ""
-	winning_player = ""
-	total_plays    = 0
+	gamePosition  = []string{"", "1", "2", "3", "4", "5", "6", "7", "8", "9"}
+	currentPlayer = "x"
+	nextMove      = ""
+	winningPlayer = ""
+	totalPlays    = 0
 )
 
 // Main exported game function
@@ -29,34 +29,34 @@ func Play() string {
 		checkForWinner()
 
 		// When a winner is found, break the loop and return winner
-		if winning_player != "" {
-			if winning_player == "draw" {
+		if winningPlayer != "" {
+			if winningPlayer == "draw" {
 				fmt.Println("It's a draw!")
 			} else {
-				fmt.Println("Winner is " + winning_player + "!")
+				fmt.Println("Winner is " + winningPlayer + "!")
 			}
 			break
 		}
 	}
 
-	return winning_player
+	return winningPlayer
 }
 
 // Game logic below
 
 func printGameField() {
 	fmt.Println("┌───┬───┬───┐")
-	fmt.Println("│ " + pos[7] + " │ " + pos[8] + " │ " + pos[9] + " │")
+	fmt.Println("│ " + gamePosition[7] + " │ " + gamePosition[8] + " │ " + gamePosition[9] + " │")
 	fmt.Println("├───┼───┼───┤")
-	fmt.Println("│ " + pos[4] + " │ " + pos[5] + " │ " + pos[6] + " │")
+	fmt.Println("│ " + gamePosition[4] + " │ " + gamePosition[5] + " │ " + gamePosition[6] + " │")
 	fmt.Println("├───┼───┼───┤")
-	fmt.Println("│ " + pos[1] + " │ " + pos[2] + " │ " + pos[3] + " │")
+	fmt.Println("│ " + gamePosition[1] + " │ " + gamePosition[2] + " │ " + gamePosition[3] + " │")
 	fmt.Println("└───┴───┴───┘")
 }
 
 func askPlayerForMove() {
-	fmt.Print("Player " + current_player + ", make a move: ")
-	_, err := fmt.Scanln(&next_move)
+	fmt.Print("Player " + currentPlayer + ", make a move: ")
+	_, err := fmt.Scanln(&nextMove)
 	if err != nil {
 		fmt.Println("Error!")
 		return
@@ -68,13 +68,13 @@ func tryPerformPlayerMove() {
 	// and the positions are updated if available.
 	// The validation fails if the input is not parseable as an integer between 1 and 9
 
-	move, err := strconv.ParseInt(next_move, 0, 8)
-	if err == nil && move > 0 && move < 10 && pos[move] == next_move {
+	move, err := strconv.ParseInt(nextMove, 0, 8)
+	if err == nil && move > 0 && move < 10 && gamePosition[move] == nextMove {
 		// This is a valid play, update positions to reflect which selection the player made
-		pos[move] = current_player
+		gamePosition[move] = currentPlayer
 
 		// And update total plays count for draw detection
-		total_plays++
+		totalPlays++
 
 		// Then switch to the other player
 		switchPlayer()
@@ -85,10 +85,10 @@ func tryPerformPlayerMove() {
 
 func switchPlayer() {
 	// Toggle between player x and o
-	if current_player == "x" {
-		current_player = "o"
+	if currentPlayer == "x" {
+		currentPlayer = "o"
 	} else {
-		current_player = "x"
+		currentPlayer = "x"
 	}
 }
 
@@ -96,25 +96,25 @@ func checkForWinner() {
 	// There is only 8 winning moves in tic-tac-toe, so I chose to just check for every combination
 	// A draw happens when all 9 positions have been played (total_plays>=9), and no winner has been found
 
-	if pos[1] == pos[2] && pos[2] == pos[3] {
-		winning_player = pos[1]
-	} else if pos[4] == pos[5] && pos[5] == pos[6] {
-		winning_player = pos[4]
-	} else if pos[7] == pos[8] && pos[8] == pos[9] {
-		winning_player = pos[7]
-	} else if pos[7] == pos[4] && pos[4] == pos[1] {
-		winning_player = pos[7]
-	} else if pos[8] == pos[5] && pos[5] == pos[2] {
-		winning_player = pos[8]
-	} else if pos[9] == pos[6] && pos[6] == pos[3] {
-		winning_player = pos[9]
-	} else if pos[7] == pos[5] && pos[5] == pos[3] {
-		winning_player = pos[7]
-	} else if pos[9] == pos[5] && pos[5] == pos[1] {
-		winning_player = pos[9]
-	} else if total_plays >= 9 {
-		winning_player = "draw"
+	if gamePosition[1] == gamePosition[2] && gamePosition[2] == gamePosition[3] {
+		winningPlayer = gamePosition[1]
+	} else if gamePosition[4] == gamePosition[5] && gamePosition[5] == gamePosition[6] {
+		winningPlayer = gamePosition[4]
+	} else if gamePosition[7] == gamePosition[8] && gamePosition[8] == gamePosition[9] {
+		winningPlayer = gamePosition[7]
+	} else if gamePosition[7] == gamePosition[4] && gamePosition[4] == gamePosition[1] {
+		winningPlayer = gamePosition[7]
+	} else if gamePosition[8] == gamePosition[5] && gamePosition[5] == gamePosition[2] {
+		winningPlayer = gamePosition[8]
+	} else if gamePosition[9] == gamePosition[6] && gamePosition[6] == gamePosition[3] {
+		winningPlayer = gamePosition[9]
+	} else if gamePosition[7] == gamePosition[5] && gamePosition[5] == gamePosition[3] {
+		winningPlayer = gamePosition[7]
+	} else if gamePosition[9] == gamePosition[5] && gamePosition[5] == gamePosition[1] {
+		winningPlayer = gamePosition[9]
+	} else if totalPlays >= 9 {
+		winningPlayer = "draw"
 	} else {
-		winning_player = ""
+		winningPlayer = ""
 	}
 }
